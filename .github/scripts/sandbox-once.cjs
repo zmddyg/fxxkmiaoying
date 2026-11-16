@@ -102,7 +102,8 @@ async function main() {
         }
         let status = 'receipt_pending';
         for (let attempt = 0; attempt < 10 && Date.now() < slot.closes; attempt++) {
-            const offset = Math.max(0, Math.floor((Date.now() - slot.opens) / 60000));
+            const elapsedMinutes = Math.max(0, Math.floor((Date.now() - slot.opens) / 60000));
+            const offset = attempt === 0 ? elapsedMinutes : Math.max(1, elapsedMinutes);
             status = await stage(offset);
             if (state?.phase === 'verified') break;
             if (['test_target_unverified', 'activity_rules_changed', 'reauthorization_required',
