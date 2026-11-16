@@ -1,0 +1,16 @@
+{
+  "timetable": "课表.json",
+  "activities": {
+    "class": {
+      "activity": "000000000000000000000000",
+      "photo_file": "function/black.jpg",
+      "fields": {
+        "姓名": "示例用户",
+        "学号": "示例学号",
+        "@名单序号": "1"
+      },
+      "location": "none"
+    }
+  },
+  "venues": {}
+}

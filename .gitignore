@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+*.pyc
+.env
+*.zip
+function/plan.json
+运行状态/
+签到配置.json
+*课表*.json
+定时触发器-*.json
+!课表.example.json

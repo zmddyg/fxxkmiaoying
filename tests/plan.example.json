@@ -1,0 +1,43 @@
+{
+  "activityRules": {
+    "needLocation": false
+  },
+  "payload": {
+    "formVal": [
+      {
+        "id": "photo",
+        "value": ""
+      }
+    ],
+    "infoVal": [
+      ""
+    ]
+  },
+  "photoIndex": 0,
+  "photoInfoIndex": 0,
+  "offsetMinutes": [
+    -6,
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    3,
+    5,
+    10,
+    22
+  ],
+  "occurrences": [
+    {
+      "day": "2026-11-16",
+      "slot": 1,
+      "opens": 1794794400000,
+      "closes": 1794795600000,
+      "key": "example-key",
+      "photo": "example.jpg"
+    }
+  ]
+}
