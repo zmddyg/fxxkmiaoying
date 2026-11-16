@@ -1,8 +1,9 @@
 name: One-time sandbox rehearsal
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '7 5 16 11 *'
+    - cron: '4 5 16 11 *'
 
 permissions:
   contents: read
@@ -16,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
-      EXPECTED_SCHEDULE_UTC: '2026-11-16T05:07:00.000Z'
-      EXPECTED_OPEN_UTC: '2026-11-16T05:13:00.000Z'
+      EXPECTED_SCHEDULE_UTC: '2026-11-16T05:04:00.000Z'
+      EXPECTED_OPEN_UTC: '2026-11-16T05:03:00.000Z'
       MIAOYING_REHEARSAL_TOKEN: ${{ secrets.MIAOYING_REHEARSAL_TOKEN }}
       MIAOYING_REHEARSAL_PLAN: ${{ secrets.MIAOYING_REHEARSAL_PLAN }}
     steps:

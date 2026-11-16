@@ -86,8 +86,10 @@ async function main() {
     }
 
     try {
-        log({ kind: 'start', at: new Date(startedAt).toISOString(), scheduled_at: process.env.EXPECTED_SCHEDULE_UTC,
-            script_delay_ms: startedAt - scheduledAt, photo_bytes: photo.length });
+        log({ kind: 'start', event: process.env.GITHUB_EVENT_NAME, at: new Date(startedAt).toISOString(),
+            scheduled_at: process.env.EXPECTED_SCHEDULE_UTC,
+            ...(process.env.GITHUB_EVENT_NAME === 'schedule' ? { script_delay_ms: startedAt - scheduledAt } : {}),
+            photo_bytes: photo.length });
         for (let attempt = 0; attempt < 8 && state?.phase !== 'ready' && Date.now() < slot.closes; attempt++) {
             const status = await stage(-1);
             if (['test_target_unverified', 'activity_rules_changed', 'reauthorization_required',
