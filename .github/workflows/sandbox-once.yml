@@ -1,0 +1,31 @@
+name: One-time sandbox rehearsal
+
+on:
+  schedule:
+    - cron: '7 5 16 11 *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: miaoying-one-time-sandbox
+  cancel-in-progress: false
+
+jobs:
+  rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      EXPECTED_SCHEDULE_UTC: '2026-11-16T05:07:00.000Z'
+      EXPECTED_OPEN_UTC: '2026-11-16T05:13:00.000Z'
+      MIAOYING_REHEARSAL_TOKEN: ${{ secrets.MIAOYING_REHEARSAL_TOKEN }}
+      MIAOYING_REHEARSAL_PLAN: ${{ secrets.MIAOYING_REHEARSAL_PLAN }}
+    steps:
+      - name: Capture runner start
+        run: date -u '+runner_started_utc=%Y-%m-%dT%H:%M:%SZ'
+      - name: Check out test code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run isolated sandbox check-in
+        run: node .github/scripts/sandbox-once.cjs
