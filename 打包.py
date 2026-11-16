@@ -45,6 +45,7 @@ def main():
             for name in FILES:
                 archive.write(FUNCTION / name, name)
             archive.write(bundle, "cloudbase-sdk.js")
+            archive.write(ROOT / "LICENSE", "LICENSE")
             archive.writestr("package.json", json.dumps(metadata))
             archive.writestr("THIRD_PARTY_LICENSES.txt", "".join(third_party_notices(lock)))
     print(json.dumps({"bytes": OUTPUT.stat().st_size, "file": OUTPUT.name}, ensure_ascii=False))
