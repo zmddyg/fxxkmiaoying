@@ -18,7 +18,15 @@ async function databaseCall(work) {
 function getCollection() {
     if (!collection) {
         const sdk = require('./cloudbase-sdk');
-        collection = sdk.init({ env: sdk.SYMBOL_CURRENT_ENV, keepalive: true, timeout: 1300, retries: 0 })
+        const { TCB_ENV_ID, TENCENT_SECRET_ID, TENCENT_SECRET_KEY, GITHUB_ACTIONS } = process.env;
+        const external = GITHUB_ACTIONS === 'true' || Boolean(TENCENT_SECRET_ID || TENCENT_SECRET_KEY);
+        if (external && (!TCB_ENV_ID || !TENCENT_SECRET_ID || !TENCENT_SECRET_KEY)) {
+            throw new JobError('cloud_database_configuration_missing');
+        }
+        const credentials = external
+            ? { env: TCB_ENV_ID, secretId: TENCENT_SECRET_ID, secretKey: TENCENT_SECRET_KEY }
+            : { env: sdk.SYMBOL_CURRENT_ENV };
+        collection = sdk.init({ ...credentials, keepalive: true, timeout: 1300, retries: 0 })
             .database().collection(COLLECTION);
     }
     return collection;

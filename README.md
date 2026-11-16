@@ -6,6 +6,8 @@
 
 希望交给编程 Agent 协助部署时，可使用 [Agent 快速部署教程](AGENT_DEPLOY.md)。
 
+也可以使用 GitHub Actions 运行签到，配置步骤见 [GitHub Actions 部署教程](GITHUB_ACTIONS.md)。该方案使用 CloudBase 数据库保存跨运行的签到状态。
+
 ## 环境
 
 - Python 3 和 Node.js 20 或更高版本，以及 npm。

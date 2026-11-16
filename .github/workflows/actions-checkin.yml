@@ -1,0 +1,35 @@
+name: Classroom attendance
+
+on:
+  workflow_dispatch:
+  # Configure the required secrets before enabling the schedule.
+  # schedule:
+  #   - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: classroom-attendance
+  cancel-in-progress: false
+
+jobs:
+  attendance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install CloudBase dependencies
+        working-directory: function
+        run: npm ci --ignore-scripts --omit=dev --no-fund
+      - name: Run attendance
+        env:
+          MIAOYING_PLAN: ${{ secrets.MIAOYING_PLAN }}
+          MIAOYING_SESSION_TOKEN: ${{ secrets.MIAOYING_SESSION_TOKEN }}
+          MIAOYING_ENABLE_SUBMIT: ${{ vars.MIAOYING_ENABLE_SUBMIT }}
+          TCB_ENV_ID: ${{ secrets.TCB_ENV_ID }}
+          TENCENT_SECRET_ID: ${{ secrets.TENCENT_SECRET_ID }}
+          TENCENT_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
+        run: node github-actions/runner.js
