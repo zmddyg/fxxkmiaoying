@@ -90,6 +90,24 @@ async function main() {
             scheduled_at: process.env.EXPECTED_SCHEDULE_UTC,
             ...(process.env.GITHUB_EVENT_NAME === 'schedule' ? { script_delay_ms: startedAt - scheduledAt } : {}),
             photo_bytes: photo.length });
+        if (process.env.GITHUB_EVENT_NAME === 'schedule') {
+            const start = performance.now();
+            const budget = { ms(maximum = Infinity) {
+                const available = Math.floor(Math.min(maximum, start + 2700 - performance.now()));
+                if (available < 75) throw new JobError('time_budget_exhausted');
+                return available;
+            } };
+            const snapshot = await api.snapshot(slot, budget);
+            const fieldId = plan.payload.formVal[plan.photoIndex].id;
+            const [row] = snapshot.rows;
+            const verified = snapshot.rows.length === 1 && row.isRemove !== true && row.isPassSecurity === true
+                && row.formVal?.some((field) => field.id === fieldId && field.value === slot.photo)
+                && row.createdAt >= slot.opens && row.createdAt < slot.closes;
+            log({ kind: 'result', status: verified ? 'scheduled_receipt_verified' : 'scheduled_receipt_unconfirmed',
+                verified, submission_calls: 0, total_ms: Math.round(performance.now() - start), api_ms: durations });
+            if (!verified) process.exitCode = 1;
+            return;
+        }
         for (let attempt = 0; attempt < 8 && state?.phase !== 'ready' && Date.now() < slot.closes; attempt++) {
             const status = await stage(-1);
             if (['test_target_unverified', 'activity_rules_changed', 'reauthorization_required',
